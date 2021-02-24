@@ -6,5 +6,13 @@ branding:
 runs:
   using: composite
   steps:
-    - run: docker run --name gnomock -d -p 23042:23042 orlangure/gnomock
+    - run: |
+        docker run --rm -d \
+            -p 23042:23042 \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v $PWD:$PWD \
+            orlangure/gnomock
+        while ! nc -z localhost 23042; do
+          sleep 0.2
+        done
       shell: bash
